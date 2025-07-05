@@ -38,3 +38,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });  
+
+const usersRoutes = require('./routes/users');
+app.use('/api/users', usersRoutes);
