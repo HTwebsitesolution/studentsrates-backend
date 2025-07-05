@@ -41,23 +41,3 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
-
-
-router.post('/', async (req, res) => {
-  const { username, email } = req.body;
-
-  if (!username || !email) {
-    return res.status(400).json({ error: 'Username and email required' });
-  }
-
-  const newUser = new User({ username, email });
-
-  try {
-    await newUser.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    console.error('Error creating user:', err); // <<=== ADD THIS LINE
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
