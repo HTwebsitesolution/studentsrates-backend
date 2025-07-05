@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const mongoose = require('mongoose');
+
+// User Schema
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true },
+  favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Deal' }]
+}, { timestamps: true });
+
+const User = mongoose.model('User', UserSchema);
 
 // GET all users
 router.get('/', async (req, res) => {
@@ -8,6 +17,7 @@ router.get('/', async (req, res) => {
     const users = await User.find();
     res.json(users);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -18,11 +28,13 @@ router.post('/', async (req, res) => {
   if (!username || !email) {
     return res.status(400).json({ error: 'Username and email required' });
   }
-  const newUser = new User({ username, email });
+
   try {
+    const newUser = new User({ username, email });
     await newUser.save();
     res.status(201).json(newUser);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Server error' });
   }
 });
